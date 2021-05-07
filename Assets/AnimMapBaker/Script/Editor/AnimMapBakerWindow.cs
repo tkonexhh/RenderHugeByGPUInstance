@@ -1,14 +1,11 @@
-﻿/*
- * Created by jiadong chen
- * http://www.chenjd.me
- */
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using System.IO;
 
-public class AnimMapBakerWindow : EditorWindow {
+public class AnimMapBakerWindow : EditorWindow
+{
 
     private enum SaveStrategy
     {
@@ -21,7 +18,7 @@ public class AnimMapBakerWindow : EditorWindow {
 
     private static GameObject _targetGo;
     private static AnimMapBaker _baker;
-    private static string _path = "DefaultPath";
+    private static string _path = "DefaultPath1";
     private static string _subPath = "SubPath";
     private static SaveStrategy _stratege = SaveStrategy.AnimMap;
     private static Shader _animMapShader;
@@ -35,8 +32,9 @@ public class AnimMapBakerWindow : EditorWindow {
     public static void ShowWindow()
     {
         EditorWindow.GetWindow(typeof(AnimMapBakerWindow));
-        _baker = new AnimMapBaker();
-        _animMapShader = Shader.Find("chenjd/AnimMapShader");
+        _baker = null;//new AnimMapBaker();
+        _animMapShader = Shader.Find("XHH/AnimMapShader");
+        _targetGo = null;
     }
 
     private void OnGUI()
@@ -50,33 +48,35 @@ public class AnimMapBakerWindow : EditorWindow {
         _stratege = (SaveStrategy)EditorGUILayout.EnumPopup("output type:", _stratege);
 
 
-        if (!GUILayout.Button("Bake")) return;
-        if(_targetGo == null)
+        if (GUILayout.Button("Bake"))
         {
-            EditorUtility.DisplayDialog("err", "targetGo is null！", "OK");
-            return;
-        }
+            if (_targetGo == null)
+            {
+                EditorUtility.DisplayDialog("err", "targetGo is null！", "OK");
+                return;
+            }
 
-        if(_baker == null)
-        {
-            _baker = new AnimMapBaker();
-        }
+            if (_baker == null)
+            {
+                _baker = new AnimMapBaker();
+            }
 
-        _baker.SetAnimData(_targetGo);
+            _baker.SetAnimData(_targetGo);
 
-        var list = _baker.Bake();
+            var list = _baker.Bake();
 
-        if (list == null) return;
-        foreach (var t in list)
-        {
-            var data = t;
-            Save(ref data);
+            if (list == null) return;
+            foreach (var t in list)
+            {
+                var data = t;
+                Save(ref data);
+            }
         }
     }
 
     private void Save(ref BakedData data)
     {
-        switch(_stratege)
+        switch (_stratege)
         {
             case SaveStrategy.AnimMap:
                 SaveAsAsset(ref data);
@@ -96,20 +96,31 @@ public class AnimMapBakerWindow : EditorWindow {
     {
         var folderPath = CreateFolder();
         var animMap = new Texture2D(data.AnimMapWidth, data.AnimMapHeight, TextureFormat.RGBAHalf, false);
+        animMap.wrapMode = TextureWrapMode.Clamp;
         animMap.LoadRawTextureData(data.RawAnimMap);
         AssetDatabase.CreateAsset(animMap, Path.Combine(folderPath, data.Name + ".asset"));
+        SaveAsTextAsset(ref data);
         return animMap;
+    }
+
+    private TextAsset SaveAsTextAsset(ref BakedData data)
+    {
+        var folderPath = CreateFolder();
+        Debug.LogError(data.JsonInfo);
+        var text = new TextAsset(data.JsonInfo);
+        AssetDatabase.CreateAsset(text, Path.Combine(folderPath, data.Name + "Info.asset"));
+        return text;
     }
 
     private Material SaveAsMat(ref BakedData data)
     {
-        if(_animMapShader == null)
+        if (_animMapShader == null)
         {
             EditorUtility.DisplayDialog("err", "shader is null!!", "OK");
             return null;
         }
 
-        if(_targetGo == null || !_targetGo.GetComponentInChildren<SkinnedMeshRenderer>())
+        if (_targetGo == null || !_targetGo.GetComponentInChildren<SkinnedMeshRenderer>())
         {
             EditorUtility.DisplayDialog("err", "SkinnedMeshRender is null!!", "OK");
             return null;
@@ -120,7 +131,7 @@ public class AnimMapBakerWindow : EditorWindow {
         var animMap = SaveAsAsset(ref data);
         mat.SetTexture("_MainTex", smr.sharedMaterial.mainTexture);
         mat.SetTexture("_AnimMap", animMap);
-        mat.SetFloat("_AnimLen", data.AnimLen);
+        mat.enableInstancing = true;
 
         var folderPath = CreateFolder();
         AssetDatabase.CreateAsset(mat, Path.Combine(folderPath, data.Name + ".mat"));
@@ -132,7 +143,7 @@ public class AnimMapBakerWindow : EditorWindow {
     {
         var mat = SaveAsMat(ref data);
 
-        if(mat == null)
+        if (mat == null)
         {
             EditorUtility.DisplayDialog("err", "mat is null!!", "OK");
             return;
@@ -149,7 +160,7 @@ public class AnimMapBakerWindow : EditorWindow {
 
     private static string CreateFolder()
     {
-        var folderPath = Path.Combine("Assets/" + _path,  _subPath);
+        var folderPath = Path.Combine("Assets/" + _path, _subPath);
         if (!AssetDatabase.IsValidFolder(folderPath))
         {
             AssetDatabase.CreateFolder("Assets/" + _path, _subPath);

@@ -1,15 +1,10 @@
-﻿/*
-Created by jiadong chen
-http://www.chenjd.me
-*/
-
-Shader "chenjd/AnimMapShader"
+﻿Shader "XHH/AnimMapShader"
 {
     Properties
     {
         _MainTex ("Texture", 2D) = "white" { }
         _AnimMap ("AnimMap", 2D) = "white" { }
-        _AnimLen ("Anim Length", Float) = 0
+        _AnimRate ("Anim Rate", Range(0, 1)) = 0
     }
     SubShader
     {
@@ -49,14 +44,18 @@ Shader "chenjd/AnimMapShader"
             sampler2D _AnimMap;
             float4 _AnimMap_TexelSize;//x == 1/width
 
-            float _AnimLen;
 
+            UNITY_INSTANCING_BUFFER_START(UnityPerMaterial)
+            UNITY_DEFINE_INSTANCED_PROP(float, _AnimRate)
+            UNITY_INSTANCING_BUFFER_END(UnityPerMaterial);
+            // float _AnimRate;
             
             v2f vert(appdata v, uint vid: SV_VertexID)//vid对应的就是
             {
                 UNITY_SETUP_INSTANCE_ID(v);
 
-                float f = _Time.y / _AnimLen;
+                // float f = _AnimRate;//_AnimRate/_ani / _AnimLen;
+                float f = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _AnimRate);
 
                 fmod(f, 1.0);
 

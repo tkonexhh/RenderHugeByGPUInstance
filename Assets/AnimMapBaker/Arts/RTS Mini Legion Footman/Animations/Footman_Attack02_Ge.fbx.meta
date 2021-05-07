@@ -1,0 +1,341 @@
+fileFormatVersion: 2
+guid: ffbb5dc973fef44f382b7bcfbc03f126
+ModelImporter:
+  serializedVersion: 19301
+  internalIDToNameTable:
+  - first:
+      1: 100000
+    second: Armor_L
+  - first:
+      1: 100002
+    second: Armor_R
+  - first:
+      1: 100004
+    second: Foot_L
+  - first:
+      1: 100006
+    second: Foot_R
+  - first:
+      1: 100008
+    second: //RootNode
+  - first:
+      1: 100010
+    second: FootmanMesh
+  - first:
+      1: 100012
+    second: Hand_L
+  - first:
+      1: 100014
+    second: Hand_R
+  - first:
+      1: 100016
+    second: Head
+  - first:
+      1: 100018
+    second: Hips
+  - first:
+      1: 100020
+    second: Index_Proximal_L
+  - first:
+      1: 100022
+    second: Index_Proximal_R
+  - first:
+      1: 100024
+    second: Lower_Arm_L
+  - first:
+      1: 100026
+    second: Lower_Leg_L
+  - first:
+      1: 100028
+    second: Rower_Arm_R
+  - first:
+      1: 100030
+    second: Rower_Reg_R
+  - first:
+      1: 100032
+    second: Shield
+  - first:
+      1: 100034
+    second: Spear
+  - first:
+      1: 100036
+    second: Spine
+  - first:
+      1: 100038
+    second: Toes_L
+  - first:
+      1: 100040
+    second: Toes_R
+  - first:
+      1: 100042
+    second: Upper_Arm_L
+  - first:
+      1: 100044
+    second: Upper_Arm_R
+  - first:
+      1: 100046
+    second: Upper_Leg_L
+  - first:
+      1: 100048
+    second: Upper_Reg_R
+  - first:
+      4: 400000
+    second: Armor_L
+  - first:
+      4: 400002
+    second: Armor_R
+  - first:
+      4: 400004
+    second: Foot_L
+  - first:
+      4: 400006
+    second: Foot_R
+  - first:
+      4: 400008
+    second: //RootNode
+  - first:
+      4: 400010
+    second: FootmanMesh
+  - first:
+      4: 400012
+    second: Hand_L
+  - first:
+      4: 400014
+    second: Hand_R
+  - first:
+      4: 400016
+    second: Head
+  - first:
+      4: 400018
+    second: Hips
+  - first:
+      4: 400020
+    second: Index_Proximal_L
+  - first:
+      4: 400022
+    second: Index_Proximal_R
+  - first:
+      4: 400024
+    second: Lower_Arm_L
+  - first:
+      4: 400026
+    second: Lower_Leg_L
+  - first:
+      4: 400028
+    second: Rower_Arm_R
+  - first:
+      4: 400030
+    second: Rower_Reg_R
+  - first:
+      4: 400032
+    second: Shield
+  - first:
+      4: 400034
+    second: Spear
+  - first:
+      4: 400036
+    second: Spine
+  - first:
+      4: 400038
+    second: Toes_L
+  - first:
+      4: 400040
+    second: Toes_R
+  - first:
+      4: 400042
+    second: Upper_Arm_L
+  - first:
+      4: 400044
+    second: Upper_Arm_R
+  - first:
+      4: 400046
+    second: Upper_Leg_L
+  - first:
+      4: 400048
+    second: Upper_Reg_R
+  - first:
+      43: 4300000
+    second: FootmanMesh
+  - first:
+      74: 7400000
+    second: Attack02
+  - first:
+      95: 9500000
+    second: //RootNode
+  - first:
+      111: 11100000
+    second: //RootNode
+  - first:
+      137: 13700000
+    second: FootmanMesh
+  externalObjects: {}
+  materials:
+    materialImportMode: 0
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 0
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 3
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Attack02
+      takeName: Take 001
+      internalID: 0
+      firstFrame: 0
+      lastFrame: 40
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
+      keepOriginalOrientation: 1
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 1
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: FootmanMesh
+        weight: 0
+      - path: Hips
+        weight: 1
+      - path: Hips/Shield
+        weight: 1
+      - path: Hips/Spear
+        weight: 1
+      - path: Hips/Spine
+        weight: 1
+      - path: Hips/Spine/Armor_L
+        weight: 1
+      - path: Hips/Spine/Armor_R
+        weight: 1
+      - path: Hips/Spine/Head
+        weight: 1
+      - path: Hips/Spine/Upper_Arm_L
+        weight: 1
+      - path: Hips/Spine/Upper_Arm_L/Lower_Arm_L
+        weight: 1
+      - path: Hips/Spine/Upper_Arm_L/Lower_Arm_L/Hand_L
+        weight: 1
+      - path: Hips/Spine/Upper_Arm_L/Lower_Arm_L/Hand_L/Index_Proximal_L
+        weight: 1
+      - path: Hips/Spine/Upper_Arm_R
+        weight: 1
+      - path: Hips/Spine/Upper_Arm_R/Rower_Arm_R
+        weight: 1
+      - path: Hips/Spine/Upper_Arm_R/Rower_Arm_R/Hand_R
+        weight: 1
+      - path: Hips/Spine/Upper_Arm_R/Rower_Arm_R/Hand_R/Index_Proximal_R
+        weight: 1
+      - path: Hips/Upper_Leg_L
+        weight: 1
+      - path: Hips/Upper_Leg_L/Lower_Leg_L
+        weight: 1
+      - path: Hips/Upper_Leg_L/Lower_Leg_L/Foot_L
+        weight: 1
+      - path: Hips/Upper_Leg_L/Lower_Leg_L/Foot_L/Toes_L
+        weight: 1
+      - path: Hips/Upper_Reg_R
+        weight: 1
+      - path: Hips/Upper_Reg_R/Rower_Reg_R
+        weight: 1
+      - path: Hips/Upper_Reg_R/Rower_Reg_R/Foot_R
+        weight: 1
+      - path: Hips/Upper_Reg_R/Rower_Reg_R/Foot_R/Toes_R
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importVisibility: 0
+    importBlendShapes: 1
+    importCameras: 0
+    importLights: 0
+    fileIdsGeneration: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    meshOptimizationFlags: -1
+    indexFormat: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 0
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 4
+    normalCalculationMode: 0
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 1
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
+  importAnimation: 1
+  humanDescription:
+    serializedVersion: 3
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    globalScale: 1
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 1
+    skeletonHasParents: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
+  animationType: 2
+  humanoidOversampling: 1
+  avatarSetup: 0
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
