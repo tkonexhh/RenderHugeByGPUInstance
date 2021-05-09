@@ -50,6 +50,7 @@
             UNITY_DEFINE_INSTANCED_PROP(float, _AnimLen)
             UNITY_DEFINE_INSTANCED_PROP(float, _AnimStartRate)
             UNITY_DEFINE_INSTANCED_PROP(float, _AnimEndRate)
+            // UNITY_DEFINE_INSTANCED_PROP(float, _AnimPlaying)
             UNITY_INSTANCING_BUFFER_END(UnityPerMaterial);
             // float _AnimRate;
             
@@ -63,17 +64,14 @@
                 UNITY_SETUP_INSTANCE_ID(v);
 
                 float animLen = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _AnimLen);
-                float f = _Time.y / animLen;
-
-                // fmod(f, 1.0);
-
-                // float f = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _AnimRate);
                 float start = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _AnimStartRate);
                 float end = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _AnimEndRate);
+                // float playing = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _AnimPlaying);
 
-                f = fmod(f, 1.0);
-                f = remap(f, 0, 1, start, end);
+                // float f = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _AnimRate);
                 
+                float f = frac(_Time.y / animLen) ;
+                f = f * (end - start) + start;
                 
                 float animMap_x = (vid + 0.5) * _AnimMap_TexelSize.x;
                 float animMap_y = f;
@@ -90,8 +88,8 @@
             fixed4 frag(v2f i): SV_Target
             {
                 fixed4 col = tex2D(_MainTex, i.uv);
-                // return fmod(_Time.y, 1.0);
-                // return i.f;
+                // return i.f * 0.5;
+                // return i.f * col;
                 return col;
             }
             ENDCG

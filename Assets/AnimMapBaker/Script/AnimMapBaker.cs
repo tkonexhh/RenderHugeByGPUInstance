@@ -162,36 +162,27 @@ public class AnimMapBaker
             return _bakedDataList;
         }
 
-        //每一个动作都生成一个动作图
-        // foreach (var t in _animData.Value.AnimationClips)
-        // {
-        //     if (!t.clip.legacy)//因为是顶点动画所以只能是legacy
-        //     {
-        //         Debug.LogError(string.Format($"{t.clip.name} is not legacy!!"));
-        //         continue;
-        //     }
-        //     BakePerAnimClip(t);
-        // }
-
         int totalHeight = 0;
         AnimDataInfo animDataInfo = new AnimDataInfo();
         //所有动作生成在一个动作图上面
-        foreach (var t in _animData.Value.AnimationClips)
+        for (int i = 0; i < _animData.Value.AnimationClips.Count; i++)
         {
-            if (!t.clip.legacy)//因为是顶点动画所以只能是legacy
+            var animationState = _animData.Value.AnimationClips[i];
+
+            if (!animationState.clip.legacy)//因为是顶点动画所以只能是legacy
             {
-                Debug.LogError(string.Format($"{t.clip.name} is not legacy!!"));
+                Debug.LogError(string.Format($"{animationState.clip.name} is not legacy!!"));
                 continue;
             }
             int startHeight = totalHeight;
-            int frameHeight = Mathf.ClosestPowerOfTwo((int)(t.clip.frameRate * t.length));//得到动画总帧数
+            int frameHeight = Mathf.ClosestPowerOfTwo((int)(animationState.clip.frameRate * animationState.length));//得到动画总帧数
             totalHeight += frameHeight;
 
             AnimMapClip animMapClip = new AnimMapClip();
             animMapClip.startHeight = startHeight;
             animMapClip.height = frameHeight;
-            animMapClip.animLen = t.clip.length;
-            animMapClip.name = t.name;
+            animMapClip.animLen = animationState.clip.length;
+            animMapClip.name = animationState.name;
             animDataInfo.animMapClips.Add(animMapClip);
         }
 
@@ -199,14 +190,14 @@ public class AnimMapBaker
         animDataInfo.maxHeight = totalHeight;
         var animMap = new Texture2D(_animData.Value.MapWidth, totalHeight, TextureFormat.RGBAHalf, true);
         animMap.name = string.Format($"{_animData.Value.Name}.animMap");
-        animMap.Apply();
+
         Debug.LogError(totalHeight);
 
         for (int i = 0; i < animDataInfo.animMapClips.Count; i++)
         {
             BakePerAnimClip(_animData.Value.AnimationClips[i], ref animMap, animDataInfo.animMapClips[i]);
         }
-
+        animMap.Apply();
         //在生成一个动画信息文本
         var animInfoJson = JsonUtility.ToJson(animDataInfo);
         Debug.LogError(animInfoJson);
@@ -222,7 +213,7 @@ public class AnimMapBaker
         perFrameTime = curAnim.length / animMapClip.height;//得到单位时间的帧数
         _animData.Value.AnimationPlay(curAnim.name);
 
-        for (int i = 0; i < animMapClip.height; i++)
+        for (int i = animMapClip.startHeight; i < animMapClip.startHeight + animMapClip.height; i++)
         {
             curAnim.time = sampleTime;
 
@@ -230,48 +221,12 @@ public class AnimMapBaker
             for (int j = 0; j < _bakedMesh.vertexCount; j++)
             {
                 var vertex = _bakedMesh.vertices[j];
-                texture.SetPixel(j, i + animMapClip.startHeight, new Color(vertex.x, vertex.y, vertex.z));
+                texture.SetPixel(j, i, new Color(vertex.x, vertex.y, vertex.z));
             }
             sampleTime += perFrameTime;
         }
-        texture.Apply();
+        // texture.Apply();
     }
-
-    // private void BakePerAnimClip(AnimationState curAnim)
-    // {
-    //     var curClipFrame = 0;
-    //     float sampleTime = 0;
-    //     float perFrameTime = 0;
-
-    //     curClipFrame = Mathf.ClosestPowerOfTwo((int)(curAnim.clip.frameRate * curAnim.length));//得到动画总帧数
-    //     perFrameTime = curAnim.length / curClipFrame;//得到单位时间的帧数
-
-    //     var animMap = new Texture2D(_animData.Value.MapWidth, curClipFrame, TextureFormat.RGBAHalf, true);
-    //     animMap.name = string.Format($"{_animData.Value.Name}_{curAnim.name}.animMap");
-    //     _animData.Value.AnimationPlay(curAnim.name);
-
-    //     for (var i = 0; i < curClipFrame; i++)
-    //     {
-    //         curAnim.time = sampleTime;
-
-    //         _animData.Value.SampleAnimAndBakeMesh(ref _bakedMesh);
-
-    //         for (var j = 0; j < _bakedMesh.vertexCount; j++)
-    //         {
-    //             var vertex = _bakedMesh.vertices[j];
-    //             // Debug.LogError(vertex.x + "-" + vertex.y + "-" + vertex.z);//不可以加log 会导致卡死
-    //             animMap.SetPixel(j, i, new Color(vertex.x, vertex.y, vertex.z));
-    //         }
-
-    //         sampleTime += perFrameTime;
-    //     }
-    //     animMap.Apply();
-
-    //     _bakedDataList.Add(new BakedData(animMap.name, animMap, ""));
-    // }
-
-
-
     #endregion
 
 

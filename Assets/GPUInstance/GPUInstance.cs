@@ -37,15 +37,16 @@ public class GPUInstance : MonoBehaviour
             for (int y = 0; y < Length; y++)
             {
                 SingleItem item = new SingleItem(x, y);
-                item.Play("Victory", true);
+                item.Play("Run", true);
                 //Run
                 //Attack01
                 //Attack02
                 //Victory
                 //Walk
+                //Idle
                 // item.animRate = Random.Range(0.0f, 1.0f);
                 m_SingleItems.Add(item);
-                animRates[i] = item.animRate;
+                // animRates[i] = item.animRate;
                 i++;
             }
         }
@@ -64,13 +65,28 @@ public class GPUInstance : MonoBehaviour
         {
             matrices[i] = Matrix4x4.TRS(m_SingleItems[i].pos, m_SingleItems[i].rotation, Vector3.one);
             m_SingleItems[i].Update();
-            // animRates[i] = m_SingleItems[i].animRate;
+            animRates[i] = m_SingleItems[i].animRate;
             animLens[i] = m_SingleItems[i].animLen;
-            animRates[i] = animRateCtrl;
+            // animRates[i] = animRateCtrl;
             animStarts[i] = m_SingleItems[i].animStartRate;
             animEnds[i] = m_SingleItems[i].animEndRate;
         }
 
+
+        // if (Input.GetMouseButtonDown(0))
+        // {
+        //     for (int i = 0; i < m_SingleItems.Count; i++)
+        //     {
+        //         if (m_SingleItems[i].playing)
+        //             m_SingleItems[i].Pause();
+        //         else
+        //             m_SingleItems[i].Resume();
+        //     }
+        // }
+    }
+
+    private void LateUpdate()
+    {
         block.SetFloatArray(AnimRateID, animRates);
         block.SetFloatArray(AnimLenID, animLens);
         block.SetFloatArray(AnimStartRateID, animStarts);

@@ -12,12 +12,11 @@ public class SingleItem
     public float animStartRate = 0;
     public float animEndRate = 0;
 
-    private float m_StartRate;
-    private float m_EndRate;
-
 
     private bool m_Playing = false;
     private bool m_Looping = false;
+
+    private bool m_Fading = false;//动画融合
 
 
     //==Static Block
@@ -44,32 +43,20 @@ public class SingleItem
     {
         if (m_Playing)
         {
-            if (animRate >= m_EndRate)
+            animRate += Time.deltaTime;
+            if (animRate >= 0.99f)
             {
                 if (m_Looping)
                 {
-                    animRate = m_StartRate;
+                    animRate = 0f;
                 }
                 else
                 {
                     m_Playing = false;
                     PlayRandomAnim();
                 }
-
-
-            }
-            else
-            {
-                animRate += Time.deltaTime * 0.07f;
-                // animRate = Mathf.Clamp(animRate, m_StartRate, m_EndRate);
             }
         }
-        // Debug.LogError(animRate);
-        // animRate += Time.deltaTime;
-        // if (animRate >= 1)
-        // {
-        //     animRate = 0;
-        // }
     }
 
     public void PlayRandomAnim()
@@ -78,7 +65,6 @@ public class SingleItem
         Play(animMapClip.name);
     }
 
-
     public void Play(string animName, bool loop = false)
     {
         if (!s_AnimDataMap.ContainsKey(animName))
@@ -86,21 +72,39 @@ public class SingleItem
             Debug.LogError("AnimName not Fount:" + animName);
             return;
         }
-        int maxHeight = s_AnimDataInfo.maxHeight;
+        animRate = 0;
         var animMapClip = s_AnimDataMap[animName];
-        int startHeight = animMapClip.startHeight;
-        int height = animMapClip.height;
-        m_StartRate = (float)startHeight / (float)maxHeight;
-
-        // Debug.LogError(m_StartRate);
-        float totalRate = (float)height / (float)maxHeight;
-        m_EndRate = m_StartRate + totalRate;
+        animStartRate = (float)animMapClip.startHeight / (float)s_AnimDataInfo.maxHeight;
+        float totalRate = (float)animMapClip.height / (float)s_AnimDataInfo.maxHeight;
+        animEndRate = animStartRate + totalRate;
         m_Playing = true;
         m_Looping = loop;
-        animRate = m_StartRate;
+
         animLen = animMapClip.animLen;
-        animStartRate = m_StartRate;
-        animEndRate = m_EndRate;
-        Debug.LogError(m_StartRate + "--" + m_EndRate + "-" + animLen);
+        // Debug.LogError(animStartRate + "--" + animEndRate + "-" + animLen);
+    }
+
+    public void CrossFade(string animName, float fadeTime = 0f, bool loop = false)
+    {
+        if (!s_AnimDataMap.ContainsKey(animName))
+        {
+            Debug.LogError("AnimName not Fount:" + animName);
+            return;
+        }
+
+        if (fadeTime > 0f)
+        {
+            m_Fading = true;
+        }
+    }
+
+    public void Pause()
+    {
+        m_Playing = false;
+    }
+
+    public void Resume()
+    {
+        m_Playing = true;
     }
 }

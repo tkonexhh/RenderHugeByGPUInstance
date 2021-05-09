@@ -11,7 +11,7 @@ public class AnimMapBakerWindow : EditorWindow
     {
         AnimMap,//only anim map
         Mat,//with shader
-        Prefab//prefab with mat
+        // Prefab//prefab with mat
     }
 
     #region FIELDS
@@ -32,8 +32,8 @@ public class AnimMapBakerWindow : EditorWindow
     public static void ShowWindow()
     {
         EditorWindow.GetWindow(typeof(AnimMapBakerWindow));
-        _baker = null;//new AnimMapBaker();
-        _animMapShader = Shader.Find("XHH/AnimMapShader");
+        // _baker = null;//new AnimMapBaker();
+        // _animMapShader = Shader.Find("XHH/AnimMapShader");
         _targetGo = null;
     }
 
@@ -61,6 +61,11 @@ public class AnimMapBakerWindow : EditorWindow
                 _baker = new AnimMapBaker();
             }
 
+            if (_animMapShader == null)
+            {
+                _animMapShader = Shader.Find("XHH/AnimMapShader");
+            }
+
             _baker.SetAnimData(_targetGo);
 
             var list = _baker.Bake();
@@ -84,9 +89,9 @@ public class AnimMapBakerWindow : EditorWindow
             case SaveStrategy.Mat:
                 SaveAsMat(ref data);
                 break;
-            case SaveStrategy.Prefab:
-                SaveAsPrefab(ref data);
-                break;
+                // case SaveStrategy.Prefab:
+                //     SaveAsPrefab(ref data);
+                //     break;
         }
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
@@ -97,6 +102,7 @@ public class AnimMapBakerWindow : EditorWindow
         var folderPath = CreateFolder();
         var animMap = new Texture2D(data.AnimMapWidth, data.AnimMapHeight, TextureFormat.RGBAHalf, false);
         animMap.wrapMode = TextureWrapMode.Clamp;
+        animMap.filterMode = FilterMode.Point;
         animMap.LoadRawTextureData(data.RawAnimMap);
         AssetDatabase.CreateAsset(animMap, Path.Combine(folderPath, data.Name + ".asset"));
         SaveAsTextAsset(ref data);
@@ -139,24 +145,24 @@ public class AnimMapBakerWindow : EditorWindow
         return mat;
     }
 
-    private void SaveAsPrefab(ref BakedData data)
-    {
-        var mat = SaveAsMat(ref data);
+    // private void SaveAsPrefab(ref BakedData data)
+    // {
+    //     var mat = SaveAsMat(ref data);
 
-        if (mat == null)
-        {
-            EditorUtility.DisplayDialog("err", "mat is null!!", "OK");
-            return;
-        }
+    //     if (mat == null)
+    //     {
+    //         EditorUtility.DisplayDialog("err", "mat is null!!", "OK");
+    //         return;
+    //     }
 
-        var go = new GameObject();
-        go.AddComponent<MeshRenderer>().sharedMaterial = mat;
-        go.AddComponent<MeshFilter>().sharedMesh = _targetGo.GetComponentInChildren<SkinnedMeshRenderer>().sharedMesh;
+    //     var go = new GameObject();
+    //     go.AddComponent<MeshRenderer>().sharedMaterial = mat;
+    //     go.AddComponent<MeshFilter>().sharedMesh = _targetGo.GetComponentInChildren<SkinnedMeshRenderer>().sharedMesh;
 
-        var folderPath = CreateFolder();
-        PrefabUtility.SaveAsPrefabAsset(go, Path.Combine(folderPath, data.Name + ".prefab")
-            .Replace("\\", "/"));
-    }
+    //     var folderPath = CreateFolder();
+    //     PrefabUtility.SaveAsPrefabAsset(go, Path.Combine(folderPath, data.Name + ".prefab")
+    //         .Replace("\\", "/"));
+    // }
 
     private static string CreateFolder()
     {
