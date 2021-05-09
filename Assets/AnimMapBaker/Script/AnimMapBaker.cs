@@ -87,7 +87,7 @@ public struct BakedData
     #region FIELDS
 
     private readonly string _name;
-    private readonly float _animLen;
+    // private readonly float _animLen;
     private readonly byte[] _rawAnimMap;
     private readonly int _animMapWidth;
     private readonly int _animMapHeight;
@@ -95,10 +95,10 @@ public struct BakedData
 
     #endregion
 
-    public BakedData(string name, float animLen, Texture2D animMap, string jsonInfo)
+    public BakedData(string name, Texture2D animMap, string jsonInfo)
     {
         _name = name;
-        _animLen = animLen;
+        // _animLen = animLen;
         _animMapHeight = animMap.height;
         _animMapWidth = animMap.width;
         _rawAnimMap = animMap.GetRawTextureData();
@@ -109,7 +109,7 @@ public struct BakedData
 
     public string Name => _name;
 
-    public float AnimLen => _animLen;
+    // public float AnimLen => _animLen;
 
     public byte[] RawAnimMap => _rawAnimMap;
 
@@ -190,9 +190,9 @@ public class AnimMapBaker
             AnimMapClip animMapClip = new AnimMapClip();
             animMapClip.startHeight = startHeight;
             animMapClip.height = frameHeight;
+            animMapClip.animLen = t.clip.length;
             animMapClip.name = t.name;
             animDataInfo.animMapClips.Add(animMapClip);
-            // Debug.LogError(":" + curClipFrame);
         }
 
         // totalHeight = Mathf.NextPowerOfTwo(totalHeight);
@@ -211,7 +211,7 @@ public class AnimMapBaker
         var animInfoJson = JsonUtility.ToJson(animDataInfo);
         Debug.LogError(animInfoJson);
 
-        _bakedDataList.Add(new BakedData(animMap.name, 1, animMap, animInfoJson));
+        _bakedDataList.Add(new BakedData(animMap.name, animMap, animInfoJson));
         return _bakedDataList;
     }
 
@@ -237,38 +237,38 @@ public class AnimMapBaker
         texture.Apply();
     }
 
-    private void BakePerAnimClip(AnimationState curAnim)
-    {
-        var curClipFrame = 0;
-        float sampleTime = 0;
-        float perFrameTime = 0;
+    // private void BakePerAnimClip(AnimationState curAnim)
+    // {
+    //     var curClipFrame = 0;
+    //     float sampleTime = 0;
+    //     float perFrameTime = 0;
 
-        curClipFrame = Mathf.ClosestPowerOfTwo((int)(curAnim.clip.frameRate * curAnim.length));//得到动画总帧数
-        perFrameTime = curAnim.length / curClipFrame;//得到单位时间的帧数
+    //     curClipFrame = Mathf.ClosestPowerOfTwo((int)(curAnim.clip.frameRate * curAnim.length));//得到动画总帧数
+    //     perFrameTime = curAnim.length / curClipFrame;//得到单位时间的帧数
 
-        var animMap = new Texture2D(_animData.Value.MapWidth, curClipFrame, TextureFormat.RGBAHalf, true);
-        animMap.name = string.Format($"{_animData.Value.Name}_{curAnim.name}.animMap");
-        _animData.Value.AnimationPlay(curAnim.name);
+    //     var animMap = new Texture2D(_animData.Value.MapWidth, curClipFrame, TextureFormat.RGBAHalf, true);
+    //     animMap.name = string.Format($"{_animData.Value.Name}_{curAnim.name}.animMap");
+    //     _animData.Value.AnimationPlay(curAnim.name);
 
-        for (var i = 0; i < curClipFrame; i++)
-        {
-            curAnim.time = sampleTime;
+    //     for (var i = 0; i < curClipFrame; i++)
+    //     {
+    //         curAnim.time = sampleTime;
 
-            _animData.Value.SampleAnimAndBakeMesh(ref _bakedMesh);
+    //         _animData.Value.SampleAnimAndBakeMesh(ref _bakedMesh);
 
-            for (var j = 0; j < _bakedMesh.vertexCount; j++)
-            {
-                var vertex = _bakedMesh.vertices[j];
-                // Debug.LogError(vertex.x + "-" + vertex.y + "-" + vertex.z);//不可以加log 会导致卡死
-                animMap.SetPixel(j, i, new Color(vertex.x, vertex.y, vertex.z));
-            }
+    //         for (var j = 0; j < _bakedMesh.vertexCount; j++)
+    //         {
+    //             var vertex = _bakedMesh.vertices[j];
+    //             // Debug.LogError(vertex.x + "-" + vertex.y + "-" + vertex.z);//不可以加log 会导致卡死
+    //             animMap.SetPixel(j, i, new Color(vertex.x, vertex.y, vertex.z));
+    //         }
 
-            sampleTime += perFrameTime;
-        }
-        animMap.Apply();
+    //         sampleTime += perFrameTime;
+    //     }
+    //     animMap.Apply();
 
-        _bakedDataList.Add(new BakedData(animMap.name, curAnim.clip.length, animMap, ""));
-    }
+    //     _bakedDataList.Add(new BakedData(animMap.name, animMap, ""));
+    // }
 
 
 
@@ -291,4 +291,5 @@ public struct AnimMapClip
     public int startHeight;
     public int height;
     public string name;
+    public float animLen;
 }

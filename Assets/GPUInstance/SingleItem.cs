@@ -5,12 +5,17 @@ using UnityEngine;
 [System.Serializable]
 public class SingleItem
 {
-    public float animRate = 0;
     public Vector3 pos;
     public Quaternion rotation;
+    public float animRate = 0;
+    public float animLen = 1;
+    public float animStartRate = 0;
+    public float animEndRate = 0;
 
     private float m_StartRate;
     private float m_EndRate;
+
+
     private bool m_Playing = false;
     private bool m_Looping = false;
 
@@ -55,8 +60,8 @@ public class SingleItem
             }
             else
             {
-                animRate += Time.deltaTime * 0.04f;
-                animRate = Mathf.Clamp(animRate, m_StartRate, m_EndRate);
+                animRate += Time.deltaTime * 0.07f;
+                // animRate = Mathf.Clamp(animRate, m_StartRate, m_EndRate);
             }
         }
         // Debug.LogError(animRate);
@@ -93,6 +98,9 @@ public class SingleItem
         m_Playing = true;
         m_Looping = loop;
         animRate = m_StartRate;
-        // Debug.LogError(m_StartRate + "--" + m_EndRate);
+        animLen = animMapClip.animLen;
+        animStartRate = m_StartRate;
+        animEndRate = m_EndRate;
+        Debug.LogError(m_StartRate + "--" + m_EndRate + "-" + animLen);
     }
 }
