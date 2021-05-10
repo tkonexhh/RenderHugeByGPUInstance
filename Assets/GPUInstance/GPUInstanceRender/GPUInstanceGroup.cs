@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,6 +15,7 @@ namespace GFrame.GPUInstance
         public Material material => m_Mat;
 
         private int m_DrawCount;
+        private int m_DrawCapacity;
         protected List<GPUInstanceCell> m_Cells;
 
 
@@ -28,19 +30,48 @@ namespace GFrame.GPUInstance
             // CreateCell();
         }
 
-        public void AddCell(GPUInstanceCell cell)
-        {
-            OnCellAdd(cell);
-            m_Cells.Add(cell);
-        }
-
-        // public void CreateCell()
+        // public void AddCell(GPUInstanceCell cell)
         // {
-        //     GPUInstanceCell cell = new GPUInstanceCell(this);
-        //     // cell.OnCellInit();
         //     OnCellAdd(cell);
         //     m_Cells.Add(cell);
         // }
+
+        public void AddCellItem(GPUInstanceCellItem cellItem)
+        {
+            GPUInstanceCell cell;
+            //寻找合适的
+            if (m_DrawCount + 1 >= m_DrawCapacity)
+            {
+                if (m_DrawCapacity == 0)
+                    m_DrawCapacity = GPUInstanceDefine.MAX_CAPACITY;
+                else
+                {
+                    m_DrawCapacity *= 2;
+
+                }
+
+                //创建新的Cell
+                cell = CreateCell();
+
+            }
+            else
+            {
+                cell = m_Cells[m_Cells.Count - 1];
+            }
+            m_DrawCount++;
+            cell.Add(cellItem);
+
+        }
+
+        public GPUInstanceCell CreateCell()
+        {
+            Debug.LogError("CreateCell");
+            GPUInstanceCell cell = OnCreateCell();
+            // cell.OnCellInit();
+            OnCellAdd(cell);
+            m_Cells.Add(cell);
+            return cell;
+        }
 
         public void Draw()
         {
@@ -52,6 +83,10 @@ namespace GFrame.GPUInstance
 
         #region override
         protected virtual void OnCellAdd(GPUInstanceCell cell) { }
+        protected virtual GPUInstanceCell OnCreateCell()
+        {
+            return new GPUInstanceCell(this);
+        }
         #endregion
 
     }

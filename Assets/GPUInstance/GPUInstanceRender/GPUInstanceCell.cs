@@ -22,6 +22,14 @@ namespace GFrame.GPUInstance
         public int Size => m_Size;
         public bool isEmpty => Size == 0;
 
+
+        // //==static
+        // public static GPUInstanceCell CreateCell(GPUInstanceGroup group)
+        // {
+        //     return new GPUInstanceCell(group);
+        // }
+        // //==
+
         public GPUInstanceCell(GPUInstanceGroup group) : this(group, 64)
         {
         }
@@ -81,6 +89,7 @@ namespace GFrame.GPUInstance
                 else
                     m_Capacity *= 2;
 
+                Debug.LogError(m_Capacity);
                 m_Capacity = Mathf.Min(GPUInstanceDefine.MAX_CAPACITY, m_Capacity);
 
                 GPUInstanceCellItem[] new_arr = new GPUInstanceCellItem[m_Capacity];

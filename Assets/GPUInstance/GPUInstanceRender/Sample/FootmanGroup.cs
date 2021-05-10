@@ -12,27 +12,22 @@ public class FootmanGroup : GPUInstanceGroup
     public FootmanGroup(int count, Mesh mesh, Material material, AnimDataInfo animDataInfo) : base(count, mesh, material, animDataInfo)
     {
         FootmanCellItem.SetAnimData(animDataInfo);
-        AddCell(new FootmanCell(this));
-        for (int x = 0; x < 30; x++)
+        for (int x = 0; x < 70; x++)
         {
-            for (int y = 0; y < 30; y++)
+            for (int y = 0; y < 70; y++)
             {
                 FootmanCellItem item = new FootmanCellItem();
                 item.Play("Attack01", false);
                 item.pos = new Vector3(x * 2, 0, y * 2);
                 item.rotation = Quaternion.identity;
-                m_Cells[0].Add(item);
+                AddCellItem(item);
             }
         }
     }
 
-    // protected override void OnCellAdd(GPUInstanceCell cell)
-    // {
-    //     cell.onCellDraw += OnCellDraw;
-    // }
+    protected override GPUInstanceCell OnCreateCell()
+    {
+        return new FootmanCell(this);
+    }
 
-    // private void OnCellDraw(MaterialPropertyBlock mpb)
-    // {
-
-    // }
 }

@@ -9,5 +9,7 @@ namespace GFrame.GPUInstance
         public Vector3 pos;
         public Quaternion rotation;
         public Vector3 scale;
+
+        public int cellIndex;
     }
 }

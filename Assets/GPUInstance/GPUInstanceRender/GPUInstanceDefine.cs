@@ -7,7 +7,7 @@ namespace GFrame.GPUInstance
 
     public class GPUInstanceDefine
     {
-        public static int MAX_CAPACITY = 1023;
+        public static int MAX_CAPACITY = 1024;
 
 
     }
