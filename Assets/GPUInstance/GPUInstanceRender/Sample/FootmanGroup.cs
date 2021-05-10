@@ -12,9 +12,9 @@ public class FootmanGroup : GPUInstanceGroup
     public FootmanGroup(int count, Mesh mesh, Material material, AnimDataInfo animDataInfo) : base(count, mesh, material, animDataInfo)
     {
         FootmanCellItem.SetAnimData(animDataInfo);
-        for (int x = 0; x < 70; x++)
+        for (int x = 0; x < 100; x++)
         {
-            for (int y = 0; y < 70; y++)
+            for (int y = 0; y < 100; y++)
             {
                 FootmanCellItem item = new FootmanCellItem();
                 item.Play("Attack01", false);

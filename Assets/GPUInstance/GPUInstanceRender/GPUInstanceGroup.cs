@@ -25,7 +25,7 @@ namespace GFrame.GPUInstance
             m_Mat = material;
             m_AnimDataInfo = animDataInfo;
 
-            m_DrawCount = count;
+            // m_DrawCount = count;
             m_Cells = new List<GPUInstanceCell>();
             // CreateCell();
         }
@@ -46,26 +46,33 @@ namespace GFrame.GPUInstance
                     m_DrawCapacity = GPUInstanceDefine.MAX_CAPACITY;
                 else
                 {
-                    m_DrawCapacity *= 2;
+                    m_DrawCapacity = GPUInstanceDefine.MAX_CAPACITY * (m_Cells.Count + 1);
 
                 }
-
+                // Debug.LogError(m_DrawCapacity);
                 //创建新的Cell
                 cell = CreateCell();
-
+                cellItem.cellIndex = m_Cells.Count - 1;
             }
             else
             {
                 cell = m_Cells[m_Cells.Count - 1];
+                cellItem.cellIndex = m_Cells.Count - 1;
             }
-            m_DrawCount++;
-            cell.Add(cellItem);
 
+            Debug.LogError(cellItem.cellIndex);
+            cell.Add(cellItem);
+            m_DrawCount++;
+        }
+
+        public void RemoveCellItem(GPUInstanceCellItem cellItem)
+        {
+            int index = cellItem.cellIndex;
         }
 
         public GPUInstanceCell CreateCell()
         {
-            Debug.LogError("CreateCell");
+            // Debug.LogError("CreateCell");
             GPUInstanceCell cell = OnCreateCell();
             // cell.OnCellInit();
             OnCellAdd(cell);

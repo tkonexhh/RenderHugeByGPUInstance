@@ -74,22 +74,22 @@ namespace GFrame.GPUInstance
             m_Items[index] = element;
         }
 
-        public void Add(GPUInstanceCellItem element)
+        public bool Add(GPUInstanceCellItem element)
         {
             if (m_Size + 1 >= GPUInstanceDefine.MAX_CAPACITY)
             {
                 Debug.LogError("MAX_CAPACITY Cant add new element ");
-                return;
+                return false;
             }
             if (m_Size + 1 >= m_Capacity) //注意扩容的消耗
             {
-                Debug.LogError("Try to double capacity");
+                // Debug.LogError("Try to double capacity");
                 if (m_Capacity == 0)
                     m_Capacity = 1;
                 else
                     m_Capacity *= 2;
 
-                Debug.LogError(m_Capacity);
+                // Debug.LogError(m_Capacity);
                 m_Capacity = Mathf.Min(GPUInstanceDefine.MAX_CAPACITY, m_Capacity);
 
                 GPUInstanceCellItem[] new_arr = new GPUInstanceCellItem[m_Capacity];
@@ -109,6 +109,7 @@ namespace GFrame.GPUInstance
             }
 
             m_Items[m_Size++] = element;
+            return true;
         }
 
         #endregion
