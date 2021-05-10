@@ -68,9 +68,9 @@
                 float end = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _AnimEndRate);
                 // float playing = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _AnimPlaying);
 
-                // float f = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _AnimRate);
+                float f = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _AnimRate);
                 
-                float f = frac(_Time.y / animLen) ;
+                // float f = frac(_Time.y / animLen) ;
                 f = f * (end - start) + start;
                 
                 float animMap_x = (vid + 0.5) * _AnimMap_TexelSize.x;
