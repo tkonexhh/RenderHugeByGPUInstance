@@ -18,7 +18,7 @@ namespace GFrame.GPUInstance
         protected int m_Capacity = 0;//Actual Arrat size
 
 
-
+        public int CellIndex { set; get; }
         public int Size => m_Size;
         public bool isEmpty => Size == 0;
 
@@ -74,12 +74,13 @@ namespace GFrame.GPUInstance
             m_Items[index] = element;
         }
 
-        public bool Add(GPUInstanceCellItem element)
+        public void Add(GPUInstanceCellItem element)
         {
+
             if (m_Size + 1 >= GPUInstanceDefine.MAX_CAPACITY)
             {
-                Debug.LogError("MAX_CAPACITY Cant add new element ");
-                return false;
+                Debug.LogError("MAX_CAPACITY Cant add new element :" + element.cellIndex);
+                // return false;
             }
             if (m_Size + 1 >= m_Capacity) //注意扩容的消耗
             {
@@ -109,7 +110,52 @@ namespace GFrame.GPUInstance
             }
 
             m_Items[m_Size++] = element;
+            // return true;
+        }
+
+        [Obsolete("消耗较大，慎用")]
+        public GPUInstanceCellItem RemoveAt(int index)
+        {
+            if (index >= m_Size || index < 0)
+                throw new IndexOutOfRangeException();
+            GPUInstanceCellItem cellItem = m_Items[index];
+
+            GPUInstanceCellItem[] new_arr = new GPUInstanceCellItem[m_Size - 1];
+            for (int i = 0, j = 0; i < m_Size; i++, j++)
+                if (i == index) j--; // Skip over rm_index by fixing j temporarily
+                else new_arr[j] = m_Items[i];
+
+            m_Items = new_arr;
+            m_Capacity = --m_Size;
+
+            return cellItem;
+        }
+
+        [Obsolete("消耗较大，慎用")]
+        public bool Remove(GPUInstanceCellItem element)
+        {
+            int index = IndexOf(element);
+            if (index == -1) return false;
+            RemoveAt(index);
             return true;
+        }
+
+        public int IndexOf(GPUInstanceCellItem element)
+        {
+            for (int i = 0; i < m_Size; i++)
+            {
+                if (element == null)
+                {
+                    if (m_Items[i] == null)
+                        return i;
+                }
+                else
+                {
+                    if (element.Equals(m_Items[i]))
+                        return i;
+                }
+            }
+            return -1;
         }
 
         #endregion

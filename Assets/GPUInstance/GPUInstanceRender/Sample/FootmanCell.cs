@@ -34,12 +34,15 @@ public class FootmanCell : GPUInstanceCell
         for (int i = 0; i < m_Size; i++)
         {
             var cell = m_Items[i] as FootmanCellItem;
-            cell.Update();
-            m_TRSMatrices[i] = Matrix4x4.TRS(m_Items[i].pos, m_Items[i].rotation, Vector3.one);
-            animRates[i] = cell.animRate;
-            animLens[i] = cell.animLen;
-            animStarts[i] = cell.animStartRate;
-            animEnds[i] = cell.animEndRate;
+            if (cell != null)
+            {
+                cell.Update();
+                m_TRSMatrices[i] = Matrix4x4.TRS(m_Items[i].pos, m_Items[i].rotation, Vector3.one);
+                animRates[i] = cell.animRate;
+                animLens[i] = cell.animLen;
+                animStarts[i] = cell.animStartRate;
+                animEnds[i] = cell.animEndRate;
+            }
         }
 
         m_MatPropBlock.SetFloatArray(FootmanGroup.AnimRateID, animRates.array);

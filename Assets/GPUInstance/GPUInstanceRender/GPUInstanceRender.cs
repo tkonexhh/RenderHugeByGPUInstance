@@ -15,7 +15,7 @@ namespace GFrame.GPUInstance
         {
             m_Groups = new List<GPUInstanceGroup>();
             AnimDataInfo animDataInfo = JsonUtility.FromJson<AnimDataInfo>(animInfoText.text);
-            GPUInstanceGroup group = new FootmanGroup(16, m_Mesh, material, animDataInfo);
+            GPUInstanceGroup group = new FootmanGroup(m_Mesh, material, animDataInfo);
             m_Groups.Add(group);
         }
 

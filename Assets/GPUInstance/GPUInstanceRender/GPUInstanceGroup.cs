@@ -19,13 +19,11 @@ namespace GFrame.GPUInstance
         protected List<GPUInstanceCell> m_Cells;
 
 
-        public GPUInstanceGroup(int count, Mesh mesh, Material material, AnimDataInfo animDataInfo)
+        public GPUInstanceGroup(Mesh mesh, Material material, AnimDataInfo animDataInfo)
         {
             m_DrawMesh = mesh;
             m_Mat = material;
             m_AnimDataInfo = animDataInfo;
-
-            // m_DrawCount = count;
             m_Cells = new List<GPUInstanceCell>();
             // CreateCell();
         }
@@ -38,44 +36,67 @@ namespace GFrame.GPUInstance
 
         public void AddCellItem(GPUInstanceCellItem cellItem)
         {
+            for (int i = 0; i < m_Cells.Count; i++)
+            {
+                int index = m_Cells[i].IndexOf(null);
+                if (index != -1)
+                {
+                    m_Cells[i].Set(index, cellItem);
+                    if (cellItem != null)
+                        cellItem.cellIndex = m_Cells[i].CellIndex;
+                    // Debug.LogError("找到null，直接set:" + m_Cells[i].CellIndex);
+                    return;
+                }
+            }
+
             GPUInstanceCell cell;
             //寻找合适的
-            if (m_DrawCount + 1 >= m_DrawCapacity)
+            if (m_DrawCount + 1 >= m_DrawCapacity - m_Cells.Count + 1)
             {
-                if (m_DrawCapacity == 0)
-                    m_DrawCapacity = GPUInstanceDefine.MAX_CAPACITY;
-                else
-                {
-                    m_DrawCapacity = GPUInstanceDefine.MAX_CAPACITY * (m_Cells.Count + 1);
-
-                }
-                // Debug.LogError(m_DrawCapacity);
                 //创建新的Cell
                 cell = CreateCell();
-                cellItem.cellIndex = m_Cells.Count - 1;
             }
             else
             {
                 cell = m_Cells[m_Cells.Count - 1];
-                cellItem.cellIndex = m_Cells.Count - 1;
+
+            }
+            if (cellItem != null)
+            {
+                cellItem.cellIndex = cell.CellIndex;
+                Debug.LogError(cellItem.cellIndex);
             }
 
-            Debug.LogError(cellItem.cellIndex);
             cell.Add(cellItem);
             m_DrawCount++;
         }
 
-        public void RemoveCellItem(GPUInstanceCellItem cellItem)
+        public bool RemoveCellItem(GPUInstanceCellItem cellItem)
         {
-            int index = cellItem.cellIndex;
+            if (cellItem == null)
+            {
+                return true;
+            }
+
+            int cellIndex = cellItem.cellIndex;
+            int index = m_Cells[cellIndex].IndexOf(cellItem);
+            if (index == -1)
+                return false;
+            // Debug.LogError("Remove:" + index);
+            m_Cells[cellIndex].Set(index, null);
+            // m_DrawCount--;
+            return true;
         }
 
         public GPUInstanceCell CreateCell()
         {
+            m_DrawCapacity = GPUInstanceDefine.MAX_CAPACITY * (m_Cells.Count + 1);
+            // Debug.LogError(m_DrawCapacity + "-" + m_DrawCount);
             // Debug.LogError("CreateCell");
             GPUInstanceCell cell = OnCreateCell();
+            cell.CellIndex = m_Cells.Count;
             // cell.OnCellInit();
-            OnCellAdd(cell);
+            // OnCellAdd(cell);
             m_Cells.Add(cell);
             return cell;
         }
@@ -89,7 +110,7 @@ namespace GFrame.GPUInstance
         }
 
         #region override
-        protected virtual void OnCellAdd(GPUInstanceCell cell) { }
+        // protected virtual void OnCellAdd(GPUInstanceCell cell) { }
         protected virtual GPUInstanceCell OnCreateCell()
         {
             return new GPUInstanceCell(this);
