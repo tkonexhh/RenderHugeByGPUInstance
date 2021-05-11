@@ -4,10 +4,9 @@ using UnityEngine;
 using GFrame.GPUInstance;
 public class FootmanCell : GPUInstanceCell
 {
-    CapacityProp<float> animRates;
-    CapacityProp<float> animLens;
-    CapacityProp<float> animStarts;
-    CapacityProp<float> animEnds;
+    CapacityProp<float> animRates1;
+    CapacityProp<float> animRates2;
+    CapacityProp<float> animLerp;
 
     public FootmanCell(GPUInstanceGroup group) : base(group)
     {
@@ -15,17 +14,15 @@ public class FootmanCell : GPUInstanceCell
 
     protected override void OnCellInit()
     {
-        animRates = new CapacityProp<float>(m_Capacity);
-        animLens = new CapacityProp<float>(m_Capacity);
-        animStarts = new CapacityProp<float>(m_Capacity);
-        animEnds = new CapacityProp<float>(m_Capacity);
+        animRates1 = new CapacityProp<float>(m_Capacity);
+        animRates2 = new CapacityProp<float>(m_Capacity);
+        animLerp = new CapacityProp<float>(m_Capacity);
     }
     protected override void OnCapacityChange()
     {
-        animRates.Expansion(m_Size, m_Capacity);
-        animLens.Expansion(m_Size, m_Capacity);
-        animStarts.Expansion(m_Size, m_Capacity);
-        animEnds.Expansion(m_Size, m_Capacity);
+        animRates1.Expansion(m_Size, m_Capacity);
+        animRates2.Expansion(m_Size, m_Capacity);
+        animLerp.Expansion(m_Size, m_Capacity);
     }
 
     protected override void OnDraw()
@@ -38,16 +35,20 @@ public class FootmanCell : GPUInstanceCell
             {
                 cell.Update();
                 m_TRSMatrices[i] = Matrix4x4.TRS(m_Items[i].pos, m_Items[i].rotation, Vector3.one);
-                animRates[i] = cell.animRate;
-                animLens[i] = cell.animLen;
-                animStarts[i] = cell.animStartRate;
-                animEnds[i] = cell.animEndRate;
+                animRates1[i] = cell.animRate1;
+                animRates2[i] = cell.animRate2;
+                animLerp[i] = cell.animLerp;
             }
         }
 
-        m_MatPropBlock.SetFloatArray(FootmanGroup.AnimRateID, animRates.array);
-        m_MatPropBlock.SetFloatArray(FootmanGroup.AnimLenID, animLens.array);
-        m_MatPropBlock.SetFloatArray(FootmanGroup.AnimStartRateID, animStarts.array);
-        m_MatPropBlock.SetFloatArray(FootmanGroup.AnimEndRateID, animEnds.array);
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            (m_Group as FootmanGroup).CrossFade();
+        }
+
+        m_MatPropBlock.SetFloatArray(FootmanGroup.AnimRate1ID, animRates1.array);
+        m_MatPropBlock.SetFloatArray(FootmanGroup.AnimRate2ID, animRates2.array);
+        m_MatPropBlock.SetFloatArray(FootmanGroup.AnimLerpID, animLerp.array);
+
     }
 }

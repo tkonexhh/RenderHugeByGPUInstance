@@ -4,8 +4,6 @@
     {
         _MainTex ("Texture", 2D) = "white" { }
         _AnimMap ("AnimMap", 2D) = "white" { }
-        // _AnimLen ("Anim Len", float) = 1
-        // _AnimRate ("Anim Rate", Range(0, 1)) = 0
     }
     SubShader
     {
@@ -36,21 +34,17 @@
             {
                 float2 uv: TEXCOORD0;
                 float4 vertex: SV_POSITION;
-                float f: TEXCOORD1;
                 UNITY_VERTEX_INPUT_INSTANCE_ID
             };
 
             sampler2D _MainTex;float4 _MainTex_ST;
-
             sampler2D _AnimMap;float4 _AnimMap_TexelSize;//x == 1/width
 
 
             UNITY_INSTANCING_BUFFER_START(UnityPerMaterial)
-            UNITY_DEFINE_INSTANCED_PROP(float, _AnimRate)
-            UNITY_DEFINE_INSTANCED_PROP(float, _AnimLen)
-            UNITY_DEFINE_INSTANCED_PROP(float, _AnimStartRate)
-            UNITY_DEFINE_INSTANCED_PROP(float, _AnimEndRate)
-            // UNITY_DEFINE_INSTANCED_PROP(float, _AnimPlaying)
+            UNITY_DEFINE_INSTANCED_PROP(float, _AnimRate1)
+            UNITY_DEFINE_INSTANCED_PROP(float, _AnimRate2)
+            UNITY_DEFINE_INSTANCED_PROP(float, _AnimLerp)
             UNITY_INSTANCING_BUFFER_END(UnityPerMaterial);
             // float _AnimRate;
             
@@ -63,33 +57,27 @@
             {
                 UNITY_SETUP_INSTANCE_ID(v);
 
-                float animLen = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _AnimLen);
-                float start = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _AnimStartRate);
-                float end = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _AnimEndRate);
-                // float playing = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _AnimPlaying);
+                float animMap_y1 = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _AnimRate1);
+                float animMap_y2 = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _AnimRate2);
+                float animLerp = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _AnimLerp);
 
-                float f = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _AnimRate);
-                
-                // float f = frac(_Time.y / animLen) ;
-                f = f * (end - start) + start;
-                
                 float animMap_x = (vid + 0.5) * _AnimMap_TexelSize.x;
-                float animMap_y = f;
+                
+                float4 pos1 = tex2Dlod(_AnimMap, float4(animMap_x, animMap_y1, 0, 0));
+                float4 pos2 = tex2Dlod(_AnimMap, float4(animMap_x, animMap_y2, 0, 0));
 
-                float4 pos = tex2Dlod(_AnimMap, float4(animMap_x, animMap_y, 0, 0));
+                float4 pos = lerp(pos1, pos2, animLerp);
 
                 v2f o;
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
                 o.vertex = UnityObjectToClipPos(pos);
-                o.f = f;
+                
                 return o;
             }
             
             fixed4 frag(v2f i): SV_Target
             {
                 fixed4 col = tex2D(_MainTex, i.uv);
-                // return i.f * 0.5;
-                // return i.f * col;
                 return col;
             }
             ENDCG

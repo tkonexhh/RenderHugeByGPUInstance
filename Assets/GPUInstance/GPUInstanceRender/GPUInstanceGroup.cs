@@ -28,12 +28,6 @@ namespace GFrame.GPUInstance
             // CreateCell();
         }
 
-        // public void AddCell(GPUInstanceCell cell)
-        // {
-        //     OnCellAdd(cell);
-        //     m_Cells.Add(cell);
-        // }
-
         public void AddCellItem(GPUInstanceCellItem cellItem)
         {
             for (int i = 0; i < m_Cells.Count; i++)
@@ -64,7 +58,7 @@ namespace GFrame.GPUInstance
             if (cellItem != null)
             {
                 cellItem.cellIndex = cell.CellIndex;
-                Debug.LogError(cellItem.cellIndex);
+                // Debug.LogError(cellItem.cellIndex);
             }
 
             cell.Add(cellItem);
@@ -91,8 +85,6 @@ namespace GFrame.GPUInstance
         public GPUInstanceCell CreateCell()
         {
             m_DrawCapacity = GPUInstanceDefine.MAX_CAPACITY * (m_Cells.Count + 1);
-            // Debug.LogError(m_DrawCapacity + "-" + m_DrawCount);
-            // Debug.LogError("CreateCell");
             GPUInstanceCell cell = OnCreateCell();
             cell.CellIndex = m_Cells.Count;
             // cell.OnCellInit();

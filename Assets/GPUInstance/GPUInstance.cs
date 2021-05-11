@@ -15,7 +15,7 @@ public class GPUInstance : MonoBehaviour
     private const int Length = 30;
     Matrix4x4[] matrices = new Matrix4x4[Length * Length];
     float[] animRates = new float[Length * Length];
-    float[] animLens = new float[Length * Length];
+    // float[] animLens = new float[Length * Length];
     float[] animStarts = new float[Length * Length];
     float[] animEnds = new float[Length * Length];
 
@@ -23,7 +23,7 @@ public class GPUInstance : MonoBehaviour
 
     [SerializeField] private List<SingleItem> m_SingleItems = new List<SingleItem>();
     static int AnimRateID = Shader.PropertyToID("_AnimRate");
-    static int AnimLenID = Shader.PropertyToID("_AnimLen");
+    // static int AnimLenID = Shader.PropertyToID("_AnimLen");
     static int AnimStartRateID = Shader.PropertyToID("_AnimStartRate");
     static int AnimEndRateID = Shader.PropertyToID("_AnimEndRate");
 
@@ -66,7 +66,7 @@ public class GPUInstance : MonoBehaviour
             matrices[i] = Matrix4x4.TRS(m_SingleItems[i].pos, m_SingleItems[i].rotation, Vector3.one);
             m_SingleItems[i].Update();
             animRates[i] = m_SingleItems[i].animRate;
-            animLens[i] = m_SingleItems[i].animLen;
+            // animLens[i] = m_SingleItems[i].animLen;
             // animRates[i] = animRateCtrl;
             animStarts[i] = m_SingleItems[i].animStartRate;
             animEnds[i] = m_SingleItems[i].animEndRate;
@@ -88,7 +88,7 @@ public class GPUInstance : MonoBehaviour
     private void LateUpdate()
     {
         block.SetFloatArray(AnimRateID, animRates);
-        block.SetFloatArray(AnimLenID, animLens);
+        // block.SetFloatArray(AnimLenID, animLens);
         block.SetFloatArray(AnimStartRateID, animStarts);
         block.SetFloatArray(AnimEndRateID, animEnds);
 

@@ -175,13 +175,15 @@ public class AnimMapBaker
                 continue;
             }
             int startHeight = totalHeight;
-            int frameHeight = Mathf.ClosestPowerOfTwo((int)(animationState.clip.frameRate * animationState.length));//得到动画总帧数
+            int frameHeight = (int)(animationState.clip.frameRate * animationState.length);//得到动画总帧数
             totalHeight += frameHeight;
 
+            float perFrameTime = animationState.length / frameHeight;
             AnimMapClip animMapClip = new AnimMapClip();
             animMapClip.startHeight = startHeight;
             animMapClip.height = frameHeight;
-            animMapClip.animLen = animationState.clip.length;
+            animMapClip.perFrameTime = perFrameTime;
+            // animMapClip.animLen = animationState.clip.length;
             animMapClip.name = animationState.name;
             animDataInfo.animMapClips.Add(animMapClip);
         }
@@ -246,5 +248,6 @@ public struct AnimMapClip
     public int startHeight;
     public int height;
     public string name;
-    public float animLen;
+    public float perFrameTime;
+    // public float animLen;
 }

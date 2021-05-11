@@ -8,7 +8,7 @@ public class SingleItem
     public Vector3 pos;
     public Quaternion rotation;
     public float animRate = 0;
-    public float animLen = 1;
+    // public float animLen = 1;
     public float animStartRate = 0;
     public float animEndRate = 0;
 
@@ -80,7 +80,7 @@ public class SingleItem
         m_Playing = true;
         m_Looping = loop;
 
-        animLen = animMapClip.animLen;
+        // animLen = animMapClip.animLen;
         // Debug.LogError(animStartRate + "--" + animEndRate + "-" + animLen);
     }
 
