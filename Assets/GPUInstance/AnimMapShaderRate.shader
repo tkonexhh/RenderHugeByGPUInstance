@@ -34,6 +34,7 @@
             {
                 float2 uv: TEXCOORD0;
                 float4 vertex: SV_POSITION;
+                float f: TEXCOORD1;
                 UNITY_VERTEX_INPUT_INSTANCE_ID
             };
 
@@ -71,12 +72,13 @@
                 v2f o;
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
                 o.vertex = UnityObjectToClipPos(pos);
-                
+                o.f = animLerp;
                 return o;
             }
             
             fixed4 frag(v2f i): SV_Target
             {
+                // return i.f;
                 fixed4 col = tex2D(_MainTex, i.uv);
                 return col;
             }

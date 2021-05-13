@@ -43,7 +43,17 @@ public class FootmanCell : GPUInstanceCell
 
         if (Input.GetKeyDown(KeyCode.A))
         {
-            (m_Group as FootmanGroup).CrossFade();
+            (m_Group as FootmanGroup).CrossFade("Run");
+        }
+
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            (m_Group as FootmanGroup).CrossFade("Walk");
+        }
+
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            (m_Group as FootmanGroup).CrossFade("Attack01");
         }
 
         m_MatPropBlock.SetFloatArray(FootmanGroup.AnimRate1ID, animRates1.array);

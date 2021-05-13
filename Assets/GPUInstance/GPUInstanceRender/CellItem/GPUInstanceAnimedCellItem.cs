@@ -12,29 +12,31 @@ namespace GFrame.GPUInstance
             public float animEndRate { set; get; }
             public float animRate { set; get; }
 
-            private float m_PerFrameTime;
+            private float m_Speed;
 
             public void InitTime(AnimMapClip clip)
             {
-                m_PerFrameTime = clip.perFrameTime;
                 animStartRate = (float)clip.startHeight / (float)s_AnimDataInfo.maxHeight;
                 float totalRate = (float)clip.height / (float)s_AnimDataInfo.maxHeight;
                 animEndRate = animStartRate + totalRate;
+                m_Speed = 1.0f / clip.animLen * (animEndRate - animStartRate);
                 Replay();
             }
 
             public bool IsEnd()
             {
+                // return animRate>=1;
                 return animRate >= animEndRate;
             }
 
             public void Trick()
             {
-                animRate += Time.deltaTime * m_PerFrameTime * 5 * 0.1f;
+                animRate += Time.deltaTime * m_Speed;
             }
 
             public void Replay()
             {
+                // animRate=0;
                 animRate = animStartRate;
             }
 
@@ -43,7 +45,7 @@ namespace GFrame.GPUInstance
         private bool m_Playing = false;
         private bool m_Looping = false;
         private bool m_Fading = false;
-
+        private float m_FadeSpeed;
 
         private Animation m_Anim1 = new Animation();
         private Animation m_Anim2 = new Animation();//动画2,用于动画融合
@@ -88,25 +90,30 @@ namespace GFrame.GPUInstance
                 }
                 else
                 {
-                    animLerp += Time.deltaTime * 1.5f;
-                    Debug.LogError("Fadding");
                     m_Anim1.Trick();
                     m_Anim2.Trick();
-                    if (m_Anim1.IsEnd())
-                    {
-                        animLerp = 0;
-                        Debug.LogError("Fade End----");
-                        // m_Anim1.animRate = m_Anim1.animEndRate;
-                        Debug.LogError("1:" + m_Anim1.animStartRate + "--" + m_Anim1.animEndRate);
-                        m_Anim1 = m_Anim2;
-                        Debug.LogError("2:" + m_Anim1.animStartRate + "--" + m_Anim1.animEndRate);
-                        // m_Anim2 = null;
-                        m_Fading = false;
-                        // m_Playing = false;
-                    }
+                    animLerp += Time.deltaTime * m_FadeSpeed;
 
-                    // if()
-                    // m_AnimLerp
+                    if (m_Anim1.IsEnd())
+                        m_Anim1.Replay();
+
+                    if (m_Anim2.IsEnd())
+                        m_Anim2.Replay();
+
+                    if (animLerp >= 1.0f)
+                    {
+                        if (m_Looping)
+                        {
+                            m_Anim1.animStartRate = m_Anim2.animStartRate;
+                            m_Anim1.animEndRate = m_Anim2.animEndRate;
+                            m_Anim1.animRate = m_Anim2.animRate;
+
+                            animLerp = 0;
+                        }
+
+                        m_Fading = false;
+
+                    }
                 }
 
             }
@@ -115,7 +122,7 @@ namespace GFrame.GPUInstance
         public void PlayRandomAnim()
         {
             var animMapClip = s_AnimDataInfo.animMapClips[Random.Range(0, s_AnimDataInfo.animMapClips.Count)];
-            Play(animMapClip.name);
+            CrossFade(animMapClip.name, 1.0f);
         }
 
         public void Play(string animName, bool loop = false)
@@ -130,7 +137,8 @@ namespace GFrame.GPUInstance
             m_Anim1.InitTime(animClip);
             m_Playing = true;
             m_Looping = loop;
-
+            m_Fading = false;
+            animLerp = 0;
         }
 
 
@@ -142,15 +150,22 @@ namespace GFrame.GPUInstance
                 return;
             }
 
-            m_Fading = true;
+
             var animClip = s_AnimDataMap[animName];
             if (m_Anim2 == null)
                 m_Anim2 = new Animation();
 
             m_Anim2.InitTime(animClip);
-            animLerp = 0;//0.4f;
+            float fadeTime = duringTime;
+            if (fadeTime >= animClip.animLen)
+                fadeTime = animClip.animLen;
+
+            m_FadeSpeed = 1.0f / fadeTime;
+
             m_Playing = true;
             m_Looping = loop;
+            m_Fading = true;
+            animLerp = 0;
         }
 
         public void Pause()

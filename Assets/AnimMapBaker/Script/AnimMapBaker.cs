@@ -182,8 +182,8 @@ public class AnimMapBaker
             AnimMapClip animMapClip = new AnimMapClip();
             animMapClip.startHeight = startHeight;
             animMapClip.height = frameHeight;
-            animMapClip.perFrameTime = perFrameTime;
-            // animMapClip.animLen = animationState.clip.length;
+            // animMapClip.perFrameTime = perFrameTime;
+            animMapClip.animLen = animationState.clip.length;
             animMapClip.name = animationState.name;
             animDataInfo.animMapClips.Add(animMapClip);
         }
@@ -248,6 +248,6 @@ public struct AnimMapClip
     public int startHeight;
     public int height;
     public string name;
-    public float perFrameTime;
-    // public float animLen;
+    // public float perFrameTime;
+    public float animLen;
 }

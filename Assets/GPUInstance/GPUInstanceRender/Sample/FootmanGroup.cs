@@ -17,7 +17,7 @@ public class FootmanGroup : GPUInstanceGroup
             for (int y = 0; y < 5; y++)
             {
                 FootmanCellItem item = new FootmanCellItem();
-                item.Play("Walk", true);
+                item.Play("Run", true);
                 // item.CrossFade("Run", 1.0f, true);
                 item.pos = new Vector3(x * 2, 0, y * 2);
                 item.rotation = Quaternion.identity;
@@ -27,11 +27,11 @@ public class FootmanGroup : GPUInstanceGroup
 
     }
 
-    public void CrossFade()
+    public void CrossFade(string animName, bool loop = true)
     {
         for (int i = 0; i < 25; i++)
         {
-            (m_Cells[0].Get(i) as GPUInstanceAnimedCellItem).CrossFade("Run", 1.0f, true);
+            (m_Cells[0].Get(i) as GPUInstanceAnimedCellItem).CrossFade(animName, 1.0f, loop);
         }
     }
 
