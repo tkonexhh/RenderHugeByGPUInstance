@@ -12,9 +12,9 @@ public class FootmanGroup : GPUInstanceGroup
     {
         FootmanCellItem.SetAnimData(animDataInfo);
 
-        for (int x = 0; x < 5; x++)
+        for (int x = 0; x < 3; x++)
         {
-            for (int y = 0; y < 5; y++)
+            for (int y = 0; y < 3; y++)
             {
                 FootmanCellItem item = new FootmanCellItem();
                 item.Play("Run", true);
@@ -29,9 +29,10 @@ public class FootmanGroup : GPUInstanceGroup
 
     public void CrossFade(string animName, bool loop = true)
     {
-        for (int i = 0; i < 25; i++)
+        for (int i = 0; i < 9; i++)
         {
-            (m_Cells[0].Get(i) as GPUInstanceAnimedCellItem).CrossFade(animName, 1.0f, loop);
+            // (m_Cells[0].Get(i) as GPUInstanceAnimedCellItem).Play(animName, loop);
+            (m_Cells[0].Get(i) as GPUInstanceAnimedCellItem).CrossFade(animName, 0.3f, loop);
         }
     }
 

@@ -84,7 +84,7 @@ namespace GFrame.GPUInstance
                         else
                         {
                             m_Playing = false;
-                            // PlayRandomAnim();
+                            PlayRandomAnim();
                         }
                     }
                 }
@@ -122,7 +122,7 @@ namespace GFrame.GPUInstance
         public void PlayRandomAnim()
         {
             var animMapClip = s_AnimDataInfo.animMapClips[Random.Range(0, s_AnimDataInfo.animMapClips.Count)];
-            CrossFade(animMapClip.name, 1.0f);
+            Play(animMapClip.name);
         }
 
         public void Play(string animName, bool loop = false)
